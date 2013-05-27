@@ -1,0 +1,17 @@
+{
+  "name": "component-ua",
+  "repo": "mobqueue/component-ua",
+  "description": "Wrapper of UrbanAirship's PhoneGap implementation for component(1)",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "trevorgerhardt/backbone": "*"
+  , "trevorgerhardt/cordova-wrapper": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ]
+}
