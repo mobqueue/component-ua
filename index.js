@@ -4,7 +4,7 @@
  */
 
 var Backbone = require('backbone')
-  , cordova = require('cordova-wrapper')
+  , cordova = require('cordova-wrapper');
 
 /**
  * Have push?
