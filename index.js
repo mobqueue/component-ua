@@ -29,7 +29,10 @@ module.exports.disable = disable;
  */
 
 function enable(id, tags) {
-  if (push) {        
+  // if you have push...
+  if (push) {
+    // disable push first
+    disable();
     // on register
     push.registerEvent('registration', function(id) {
       // check if push is enabled
