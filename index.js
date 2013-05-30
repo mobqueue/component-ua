@@ -36,10 +36,9 @@ function enable(id, tags, callback) {
     // check if push is enabled
     push.isPushEnabled(function(enabled) {
       if (enabled) {
-        callback();
-      } else {
-        register(id, tags, callback);
-      }
+        disable();
+      } 
+      register(id, tags, callback);
     });
   } else {
     callback();
