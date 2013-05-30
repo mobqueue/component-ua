@@ -92,18 +92,10 @@ function register(id, tags, callback) {
  */
 
 function handleIncoming(data) {
-  cordova.alert({ 
-    message: 'incoming!' 
-  }, function() {
-    push.getIncoming(function(data) {
-      cordova.alert({
-        title: 'incoming...'
-      , message: JSON.stringify(data);
-      });
-      if (data.extras.url) {
-        Backbone.history.navigate(data.extras.url, { trigger: true });
-      }
-    });
+  push.getIncoming(function(data) {
+    if (data.extras.url) {
+      Backbone.history.navigate(data.extras.url, { trigger: true });
+    }
   });
 }
 
