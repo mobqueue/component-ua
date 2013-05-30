@@ -62,11 +62,8 @@ function register(id, tags, callback) {
     });
   });
 
-  push.getIncoming(function(data) {
-    if (data.extras.url) {
-      Backbone.history.navigate(data.extras.url, { trigger: true });
-    }
-  });
+  // Handle Incoming
+  document.addEventListener('resume', handleIncoming, false);
 
   // enable push
   push.enablePush();
@@ -91,11 +88,32 @@ function register(id, tags, callback) {
 }
 
 /**
+ * Handle Incoming
+ */
+
+function handleIncoming(data) {
+  cordova.alert({ 
+    message: 'incoming!' 
+  }, function() {
+    push.getIncoming(function(data) {
+      cordova.alert({
+        title: 'incoming...'
+      , message: JSON.stringify(data);
+      });
+      if (data.extras.url) {
+        Backbone.history.navigate(data.extras.url, { trigger: true });
+      }
+    });
+  });
+}
+
+/**
  * Disable push
  */
 
 function disable() {
   if (push) {
+    document.removeEventListener('resume', handleIncoming);
     push.resetBadge();
     push.disablePush();
     push.disableLocation();
