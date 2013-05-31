@@ -62,14 +62,6 @@ function enable(id, tags, callback) {
  */
 
 function register(id, tags, callback) {  
-  // push
-  push.registerEvent('push', function(data) {
-    cordova.alert({
-      title: data.extras.title || 'Perfect'
-    , message: data.message
-    });
-  });
-
   // Handle Incoming
   document.addEventListener('resume', handleIncoming, false);
 
