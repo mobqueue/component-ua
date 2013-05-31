@@ -10,7 +10,8 @@ var Backbone = require('backbone')
  * Have push?
  */
 
-var push = window.pushNotification;
+var push = window.pushNotification
+  , registered = false;
 
 /**
  * Expose `enable`
@@ -33,6 +34,17 @@ function enable(id, tags, callback) {
 
   // if you have push...
   if (push) {
+    // Register push handler once
+    if (!registered) {
+      push.registerEvent('push', function(data) {
+        cordova.alert({
+          title: data.extras.title || 'Perfect'
+        , message: data.message
+        });
+      });
+      registered = true;
+    }
+
     // check if push is enabled
     push.isPushEnabled(function(enabled) {
       if (enabled) {
@@ -49,10 +61,7 @@ function enable(id, tags, callback) {
  * Register
  */
 
-function register(id, tags, callback) {
-  // on register
-  push.registerEvent('registration', callback);
-  
+function register(id, tags, callback) {  
   // push
   push.registerEvent('push', function(data) {
     cordova.alert({
@@ -74,16 +83,16 @@ function register(id, tags, callback) {
   push.enableBackgroundLocation();
 
   // enable auto badge
-  push.setAutobadgeEnabled(true);
+  push.setAutobadgeEnabled(true, function() {});
 
   // set the alias to their id
-  push.setAlias(id);
+  push.setAlias(id, function() {});
   
   // set the tags so we can find them
-  push.setTags(tags);
+  push.setTags(tags, function() {});
 
   // Register for sound, alert, and badge push notifications
-  push.registerForNotificationTypes(push.notificationType.sound | push.notificationType.alert | push.notificationType.badge);
+  push.registerForNotificationTypes(push.notificationType.sound | push.notificationType.alert | push.notificationType.badge, callback);
 }
 
 /**
