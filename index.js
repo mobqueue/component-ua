@@ -11,6 +11,7 @@ var Backbone = require('backbone')
  */
 
 var push = window.pushNotification
+  , currentCallback = null
   , registered = false;
 
 /**
@@ -30,7 +31,7 @@ module.exports.disable = disable;
  */
 
 function enable(id, tags, callback) {
-  callback = callback || function(){};
+  currentCallback = callback || function(){};
 
   // if you have push...
   if (push) {
@@ -42,6 +43,11 @@ function enable(id, tags, callback) {
         , message: data.message
         });
       });
+
+      push.registerEvent('registration', function(deviceToken) {
+        useLatestCallback(deviceToken);
+      });
+
       registered = true;
     }
 
@@ -50,7 +56,7 @@ function enable(id, tags, callback) {
       if (enabled) {
         disable();
       } 
-      register(id, tags, callback);
+      register(id, tags);
     });
   } else {
     callback();
@@ -58,10 +64,18 @@ function enable(id, tags, callback) {
 }
 
 /**
+ * Use latest callback
+ */
+
+function useLatestCallback(deviceToken) {
+  currentCallback(deviceToken);
+}
+
+/**
  * Register
  */
 
-function register(id, tags, callback) {  
+function register(id, tags) {  
   // Handle Incoming
   document.addEventListener('resume', handleIncoming, false);
 
@@ -85,21 +99,6 @@ function register(id, tags, callback) {
 
   // Register for sound, alert, and badge push notifications
   push.registerForNotificationTypes(push.notificationType.sound | push.notificationType.alert | push.notificationType.badge);
-
-  // Get the device id and callback
-  push.getPushId(callback);
-}
-
-/**
- * Handle Incoming
- */
-
-function handleIncoming(data) {
-  push.getIncoming(function(data) {
-    if (data.extras.url) {
-      Backbone.history.navigate(data.extras.url, { trigger: true });
-    }
-  });
 }
 
 /**
@@ -114,4 +113,16 @@ function disable() {
     push.disableLocation();
     push.disableBackgroundLocation();
   }
+}
+
+/**
+ * Handle Incoming
+ */
+
+function handleIncoming(data) {
+  push.getIncoming(function(data) {
+    if (data.extras.url) {
+      Backbone.history.navigate(data.extras.url, { trigger: true });
+    }
+  });
 }
