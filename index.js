@@ -84,7 +84,10 @@ function register(id, tags, callback) {
   push.setTags(tags, function() {});
 
   // Register for sound, alert, and badge push notifications
-  push.registerForNotificationTypes(push.notificationType.sound | push.notificationType.alert | push.notificationType.badge, callback);
+  push.registerForNotificationTypes(push.notificationType.sound | push.notificationType.alert | push.notificationType.badge);
+
+  // Get the device id and callback
+  push.getPushId(callback);
 }
 
 /**
