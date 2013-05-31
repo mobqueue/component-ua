@@ -44,8 +44,8 @@ function enable(id, tags, callback) {
         });
       });
 
-      push.registerEvent('registration', function(deviceToken) {
-        useLatestCallback(deviceToken);
+      push.registerEvent('registration', function(err, deviceToken) {
+        useLatestCallback(err, deviceToken);
       });
 
       registered = true;
@@ -67,8 +67,8 @@ function enable(id, tags, callback) {
  * Use latest callback
  */
 
-function useLatestCallback(deviceToken) {
-  currentCallback(deviceToken);
+function useLatestCallback(err, deviceToken) {
+  currentCallback(err, deviceToken);
 }
 
 /**
