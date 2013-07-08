@@ -38,10 +38,22 @@ function enable(id, tags, callback) {
     // Register push handler once
     if (!registered) {
       push.registerEvent('push', function(data) {
-        cordova.alert({
-          title: data.extras.title || 'Perfect'
-        , message: data.message
-        });
+        if (data.extras.url) {
+          cordova.confirm({
+            title: data.extras.title || 'Perfect'
+          , message: data.message
+          , buttonNames: 'Show,Done'
+          }, function(yes) {
+            if (yes) {
+              Backbone.history.navigate(data.extras.url, { trigger: true });
+            }
+          })
+        } else {
+          cordova.alert({
+            title: data.extras.title || 'Perfect'
+          , message: data.message
+          });
+        }
       });
 
       push.registerEvent('registration', function(err, deviceToken) {
